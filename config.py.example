@@ -1,0 +1,3 @@
+from pathlib import Path
+
+repositories_directories = [Path("D:/clemens/projects/deinetuer"), Path("C:/blender/scripts_folder/addons/door_wizard")]
