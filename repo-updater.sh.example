@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd ~/scripts/addons/repo-updater && python3 repo-updater.py config 0
+
