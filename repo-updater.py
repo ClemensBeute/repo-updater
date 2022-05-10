@@ -4,11 +4,11 @@ from pathlib import Path
 import importlib
 # install python-git if missing
 try:
-    from git import Repo
+    from pygit2 import Repository
 except ImportError:
     print("Trying to Install required module: git (pip install python-git)")
-    os.system(f'{sys.executable} -m pip install python-git')
-from git import Repo
+    os.system(f'{sys.executable} -m pip install pygit2')
+from pygit2 import Repository
 # install click
 try:
     import click
@@ -16,7 +16,6 @@ except ImportError:
     print("Trying to Install required module: click (pip install click)")
     os.system(f'{sys.executable} -m pip install click')
 import click
-
 
 conf = str(sys.argv[1])
 upload = int(sys.argv[2])
@@ -43,7 +42,10 @@ for repo in config.repositories_directories:
                     print(x)
                 for x in output:
                     if any(x.startswith(y) for y in ["!", "?", "M", "A", "R"]):
-                        prompt = click.prompt('c = commit and push? (addremoves automaticly) | r = revert changes and purge  | n = do nothing', type=str)
+                        prompt = click.prompt(
+                            'c = commit and push? (addremoves automaticly) | r = revert changes and purge  | n = do nothing',
+                            type=str
+                        )
                         if prompt == "c":
                             os.system("hg addremove")
                             message = click.prompt('commit message', type=str)
@@ -67,10 +69,13 @@ for repo in config.repositories_directories:
             print("GIT: ", repository.name)
             os.chdir(repository)
             if upload == 1:
-                repo = Repo(str(repository))
+                repo = Repository(str(repository))
                 if repo.is_dirty():
                     os.system("git status")
-                    prompt = click.prompt('c = commit and push? (addremoves automaticly) | r = restore and clean  | n = do nothing', type=str)
+                    prompt = click.prompt(
+                        'c = commit and push? (addremoves automaticly) | r = restore and clean  | n = do nothing',
+                        type=str
+                    )
                     if prompt == "c":
                         os.system("git add .")
                         message = click.prompt('commit message', type=str)
