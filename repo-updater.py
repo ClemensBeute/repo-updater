@@ -70,7 +70,9 @@ for repo in config.repositories_directories:
             os.chdir(repository)
             if upload == 1:
                 repo = Repository(str(repository))
-                if repo.is_dirty():
+                status = repo.status()
+                status_values = list(status.values())
+                if not(all(x == 16384 for x in status_values) or status == {}):
                     os.system("git status")
                     prompt = click.prompt(
                         'c = commit and push? (addremoves automaticly) | r = restore and clean  | n = do nothing',
