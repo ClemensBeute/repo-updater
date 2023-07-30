@@ -136,6 +136,7 @@ for repo in config.repositories_directories:
 
             root_path = Path(backup.root_path)
             if upload == 1:
+                print("")
                 if _is_different(repository, root_path) is True:
                     print("changes found!")
                     prompt = click.prompt(f'copy changes to {str(root_path)}? y/n', type=str)
