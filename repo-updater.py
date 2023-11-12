@@ -135,16 +135,19 @@ for repo in config.repositories_directories:
             backup = importlib.machinery.SourceFileLoader("backup", str(r)).load_module()
 
             root_path = Path(backup.root_path)
-            if upload == 1:
-                print("")
-                if _is_different(repository, root_path) is True:
-                    print("changes found!")
-                    prompt = click.prompt(f'copy changes to {str(root_path)}? y/n', type=str)
-                    if prompt == "y":
-                        os.system(f'robocopy "{repository}" "{root_path}" /e /purge')
+            if root_path.exists():
+                if upload == 1:
+                    print("")
+                    if _is_different(repository, root_path) is True:
+                        print("changes found!")
+                        prompt = click.prompt(f'copy changes to {str(root_path)}? y/n', type=str)
+                        if prompt == "y":
+                            os.system(f'robocopy "{repository}" "{root_path}" /e /purge')
+                else:
+                    if _is_different(root_path, repository) is True:
+                        print("changes found!")
+                        prompt = click.prompt(f'copy changes from {root_path}? y/n', type=str)
+                        if prompt == "y":
+                            os.system(f'robocopy "{root_path}" "{repository}" /e /purge')
             else:
-                if _is_different(root_path, repository) is True:
-                    print("changes found!")
-                    prompt = click.prompt(f'copy changes from {root_path}? y/n', type=str)
-                    if prompt == "y":
-                        os.system(f'robocopy "{root_path}" "{repository}" /e /purge')
+                print(f"{root_path} doesn't exist! Typo?")
