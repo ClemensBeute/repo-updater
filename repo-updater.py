@@ -1,5 +1,6 @@
 # updates all hg repositorys in a given directory
 import sys
+import math
 
 sys.dont_write_bytecode = True
 import os, sys, subprocess
@@ -37,18 +38,18 @@ def _is_different(main_dir, check_dir):
         entry_check = Path(*p)
         # check if file exist, if not, dir is different
         if not entry_check.exists():
+            print("new file*s")
             different = True
             break
         # check if date and file size are same, otherwise dir is different
         t1 = os.stat(str(entry)).st_mtime
         t2 = os.stat(str(entry_check)).st_mtime
-        t1_round = str(t1).split(".")[0][:-1]
-        t2_round = str(t2).split(".")[0][:-1]
-        time_diff = t1_round == t2_round
+        time_diff = math.isclose(t1, t2, rel_tol=1)
         size_diff = os.stat(str(entry)).st_size == os.stat(str(entry_check)).st_size
         if time_diff and size_diff:
             continue
         else:
+            print(f"TIME {t1} {t2} | SIZE {size_diff} | {entry}")
             different = True
             break
     return different
@@ -142,12 +143,12 @@ for repo in config.repositories_directories:
                         print("changes found!")
                         prompt = click.prompt(f'copy changes to {str(root_path)}? y/n', type=str)
                         if prompt == "y":
-                            os.system(f'robocopy "{repository}" "{root_path}" /e /purge')
+                            os.system(f'robocopy "{repository}" "{root_path}" /e /purge /timfix /dcopy:DAT /copy:DAT')
                 else:
                     if _is_different(root_path, repository) is True:
                         print("changes found!")
                         prompt = click.prompt(f'copy changes from {root_path}? y/n', type=str)
                         if prompt == "y":
-                            os.system(f'robocopy "{root_path}" "{repository}" /e /purge')
+                            os.system(f'robocopy "{root_path}" "{repository}" /e /purge /timfix /dcopy:DAT /copy:DAT')
             else:
                 print(f"{root_path} doesn't exist! Typo?")
