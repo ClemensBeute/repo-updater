@@ -41,15 +41,20 @@ def _is_different(main_dir, check_dir):
             print("new file*s")
             different = True
             break
+        if entry.is_file() == False:
+            continue
         # check if date and file size are same, otherwise dir is different
         t1 = os.stat(str(entry)).st_mtime
         t2 = os.stat(str(entry_check)).st_mtime
         time_diff = math.isclose(t1, t2, rel_tol=1)
-        size_diff = os.stat(str(entry)).st_size == os.stat(str(entry_check)).st_size
+
+        s1 = os.stat(str(entry)).st_size 
+        s2 = os.stat(str(entry_check)).st_size
+        size_diff = s1 == s2
         if time_diff and size_diff:
             continue
         else:
-            print(f"TIME {t1} {t2} | SIZE {size_diff} | {entry}")
+            print(f"TIME {t1} {t2} | SIZE {s1} {s2} | {entry}")
             different = True
             break
     return different
