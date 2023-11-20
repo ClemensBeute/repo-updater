@@ -57,7 +57,7 @@ def _is_different(main_dir, check_dir):
 
 for repo in config.repositories_directories:
     if not repo.exists():
-        print("Hello")
+        print("Repo doesn't exist")
         continue
     # only check directories
     print("Check all repositories in ", repo, "\n")
