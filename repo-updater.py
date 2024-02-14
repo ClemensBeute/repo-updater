@@ -138,7 +138,7 @@ for repo in config.repositories_directories:
                 os.system("git pull")
 
         # .backup (simple custom backup "repo")
-        elif r.name == ".backup":
+        elif r.name == ".backup" and not root_update:
             repository = r.parent
             print()
             print("BACKUP: ", repository.parent.name)
