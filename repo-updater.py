@@ -23,6 +23,10 @@ import click
 
 conf = str(sys.argv[1])
 upload = int(sys.argv[2])
+
+root_update = 0
+if len(sys.argv) > 3:
+    root_update = int(sys.argv[3])
 config = importlib.import_module(conf)
 
 
@@ -100,7 +104,8 @@ for repo in config.repositories_directories:
                         break
 
             else:
-                os.system("hg pull")
+                if not root_update:
+                    os.system("hg pull")
                 os.system("hg up")
         # GIT
         elif r.name == ".git":
